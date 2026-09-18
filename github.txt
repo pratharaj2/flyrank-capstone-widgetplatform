@@ -1,0 +1,85 @@
+# Capstone Design
+
+## Problem
+
+Businesses need a simple way to embed lead-capture widgets
+on external websites without building the backend themselves.
+
+## Users
+
+### Widget Owner
+Creates and manages widgets and views submissions.
+
+### Website Visitor
+Interacts with an embedded widget and submits information.
+
+## Core Flow
+
+Owner → Widget API → Database
+
+Customer Website → widget.js → Config API
+
+Visitor → Submission API → Validation → Rate Limit
+→ Spam Check → Geo Enrichment → Database
+→ Side Effect
+
+## Data Model
+
+User/Tenant
+- id
+- email
+- password_hash
+
+Widget
+- id
+- tenant_id
+- type
+- title
+- description
+- fields
+- button_text
+- version
+- created_at
+- updated_at
+
+Submission
+- id
+- widget_id
+- tenant_id
+- data
+- ip_address
+- country
+- city
+- created_at
+
+## API Surface
+
+POST /auth/login
+POST /widgets
+GET /widgets
+GET /widgets/{id}
+PATCH /widgets/{id}
+DELETE /widgets/{id}
+
+GET /public/widgets/{id}/config
+GET /widget.js
+
+POST /public/submissions
+
+GET /dashboard/submissions
+GET /dashboard/stats
+
+## Security
+
+Authentication
+Tenant isolation
+Input validation
+CORS
+Rate limiting
+Honeypot spam protection
+Payload size limits
+
+## Non-goal
+
+This project will not implement a production-grade
+visual form builder or real CDN hosting.
